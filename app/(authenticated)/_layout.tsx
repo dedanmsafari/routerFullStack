@@ -14,7 +14,7 @@ const Page = () => {
       }}
     >
       <Stack.Screen name="(Drawer)" options={{ headerShown: false }} />
-      <Stack.Screen name="(Details)/[id]" />
+      <Stack.Screen name="Details/[id]" />
     </Stack>
   );
 };

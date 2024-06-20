@@ -1,11 +1,13 @@
-import { View, Text, Alert } from "react-native";
+import { View, Text, Alert, TouchableOpacity } from "react-native";
 import React from "react";
 import { Tabs, Link } from "expo-router";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { DrawerToggleButton } from "@react-navigation/drawer";
+import { useAuth } from "@/context/AuthContext";
 
 const Page = () => {
+  const { onLogout } = useAuth();
   return (
     <Tabs
       screenOptions={{
@@ -16,9 +18,9 @@ const Page = () => {
         headerTitleAlign: "center",
         tabBarActiveTintColor: Colors.primary,
         headerRight: () => (
-          <Link href="/" replace asChild>
+          <TouchableOpacity onPress={onLogout}>
             <Ionicons name="log-out-outline" size={24} color="#fff" />
-          </Link>
+          </TouchableOpacity>
         ),
         headerLeft: () => <DrawerToggleButton tintColor="#fff" />,
       }}
@@ -63,7 +65,7 @@ const Page = () => {
         }}
       />
       <Tabs.Screen
-        name="(list)"
+        name="list"
         options={{
           title: "List Items",
           tabBarLabel: "List",

@@ -21,7 +21,6 @@ export default function Layout() {
           options={{ title: "Home", headerShown: false }}
         />
         <Drawer.Screen name="settings" options={{ title: "Settings" }} />
-        {/* <Drawer.Screen name="(Details)/[id]" options={{ title: "" }} /> */}
       </Drawer>
     </GestureHandlerRootView>
   );
