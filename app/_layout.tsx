@@ -1,7 +1,8 @@
 import Colors from "@/constants/Colors";
+import AuthProvider, { useAuth } from "@/context/AuthContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Slot, Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -20,6 +21,22 @@ function InitialLayOut() {
     ...FontAwesome.font,
   });
 
+  const { token, initialized } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!initialized) return;
+
+    const insideAuthGroup = segments[0] === "(authenticated)";
+
+    if (token && !insideAuthGroup) {
+      router.replace("/(authenticated)/(Drawer)/(tabs)/home");
+    } else if (!token && insideAuthGroup) {
+      router.replace("/");
+    }
+  }, [token, initialized]);
+
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
@@ -31,8 +48,8 @@ function InitialLayOut() {
     }
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
+  if (!loaded || !initialized) {
+    return <Slot />;
   }
 
   return (
@@ -55,6 +72,7 @@ function InitialLayOut() {
             headerBackTitle: "Login",
           }}
         />
+
         <Stack.Screen
           name="privacy"
           options={{
@@ -74,5 +92,9 @@ function InitialLayOut() {
 }
 
 export default function RootLayoutNav() {
-  return <InitialLayOut />;
+  return (
+    <AuthProvider>
+      <InitialLayOut />
+    </AuthProvider>
+  );
 }
